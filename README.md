@@ -20,12 +20,12 @@ This repository provides a complete engineering team simulation using AI agents 
 
 ```bash
 # Install all three skills
-npx skills add bernardus/tech-team
+npx skills add BvdMerwe/tech-team
 
 # Or install individually
-npx skills add bernardus/tech-team/product-owner
-npx skills add bernardus/tech-team/tech-lead
-npx skills add bernardus/tech-team/engineer
+npx skills add BvdMerwe/tech-team/product-owner
+npx skills add BvdMerwe/tech-team/tech-lead
+npx skills add BvdMerwe/tech-team/engineer
 ```
 
 ## The Hierarchy
