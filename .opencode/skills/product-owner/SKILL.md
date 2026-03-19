@@ -246,7 +246,7 @@ When a user requests a feature:
 
 3. **Create beads task:**
    ```bash
-   BD_ACTOR="PO" bd create "[Feature] - [Description]" -t feature -p 2
+   BD_ACTOR="PO" bd create "[Feature] - [Description]" -t feature -p 2 --labels needs-tl-review
    ```
 
 4. **Hand off to TL**
