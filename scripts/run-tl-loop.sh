@@ -17,8 +17,9 @@ echo "Press Ctrl+C to stop."
 
 while true; do
   # Check for TL-relevant work: features needing review or PRs ready for approval
-  WORK=$(cd "$REPO_DIR" && BD_ACTOR="TL" bd list --status open --json 2>/dev/null || echo "")
-  TL_WORK=$(echo "$WORK" | grep -E '"needs-tl-review"|"pr-ready"' || true)
+  # Use --label-any (not --status open) so in_progress tasks are also found
+  WORK=$(cd "$REPO_DIR" && BD_ACTOR="TL" bd list --label-any needs-tl-review pr-ready --json 2>/dev/null || echo "[]")
+  TL_WORK=$([ "$WORK" != "[]" ] && [ -n "$WORK" ] && echo "yes" || echo "")
   if [ -n "$TL_WORK" ]; then
     echo "[$(date '+%H:%M:%S')] TL work found. Invoking opencode..."
     cd "$REPO_DIR" && AGENT_LOOP_MODE=tl opencode run --model "$TL_MODEL" \

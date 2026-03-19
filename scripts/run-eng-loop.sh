@@ -17,8 +17,9 @@ echo "Press Ctrl+C to stop."
 
 while true; do
   # Check for engineer-assigned work
-  WORK=$(cd "$REPO_DIR" && BD_ACTOR="Engineer" bd list --status open --json 2>/dev/null || echo "")
-  ENG_WORK=$(echo "$WORK" | grep '"needs-engineer"' || true)
+  # Use --label-any (not --status open) so in_progress tasks are also found
+  WORK=$(cd "$REPO_DIR" && BD_ACTOR="Engineer" bd list --label-any needs-engineer --json 2>/dev/null || echo "[]")
+  ENG_WORK=$([ "$WORK" != "[]" ] && [ -n "$WORK" ] && echo "yes" || echo "")
   if [ -n "$ENG_WORK" ]; then
     echo "[$(date '+%H:%M:%S')] Engineer work found. Invoking opencode..."
     cd "$REPO_DIR" && AGENT_LOOP_MODE=engineer opencode run --model "$ENG_MODEL" \

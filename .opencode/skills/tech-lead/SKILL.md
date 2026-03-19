@@ -130,12 +130,12 @@ BD_ACTOR="TL" bd list --status in_progress
 2. TL loop detects `pr-ready` label and invokes TL to review
 3. TL examines code/test output
 4. If approved: close the task (`BD_ACTOR="TL" bd close [task-id] --reason "Approved"`)
-5. If changes needed: remove the label and comment with feedback:
+5. If changes needed: remove `pr-ready`, restore `needs-engineer`, and comment with feedback:
    ```bash
-   BD_ACTOR="TL" bd update [task-id] --remove-label pr-ready
+   BD_ACTOR="TL" bd update [task-id] --remove-label pr-ready --add-label needs-engineer
    BD_ACTOR="TL" bd comments add [task-id] "Changes requested: [feedback]"
    ```
-   The engineer loop will pick up the task again when the label is removed.
+   The engineer loop will pick up the task again when it sees the `needs-engineer` label.
 
 ### 4. Work Coordination
 
