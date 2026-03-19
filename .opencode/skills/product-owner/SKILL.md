@@ -80,7 +80,7 @@ User Request → Product Owner → Tech Lead → Engineer(s)
 **Create tracking for TL visibility:**
 
 ```bash
-BD_ACTOR="PO" bd create "[Feature Name] - [Brief Description]" -t feature -p [1-3]
+BD_ACTOR="PO" bd create "[Feature Name] - [Brief Description]" -t feature -p [1-3] --labels needs-tl-review
 ```
 
 **Update with spec details:**
@@ -111,6 +111,28 @@ BD_ACTOR="PO" bd comments add [task-id] "@TL - Ready for technical review and br
 - Work with user to adjust scope
 - Revise acceptance criteria
 - Get user approval on changes
+
+### 5. Team Mode (Optional)
+
+After completing the beads handoff, offer to spin up the agent loops:
+
+> "Want me to start the TL and Engineer agent loops so this gets worked on automatically?
+> This requires `TL_MODEL` and `ENG_MODEL` to be set in your environment.
+> Example: `TL_MODEL=claude-sonnet-4-5 ENG_MODEL=claude-haiku-3-5`
+> Are those set?"
+
+- If **yes**: run `bash scripts/spawn-agents.sh` (it inherits the env vars from your shell)
+- If **no**: let the user know they can run it manually:
+  ```bash
+  TL_MODEL=<model> ENG_MODEL=<model> bash scripts/spawn-agents.sh
+  ```
+  Or run each loop separately:
+  ```bash
+  TL_MODEL=<model> bash scripts/run-tl-loop.sh
+  ENG_MODEL=<model> bash scripts/run-eng-loop.sh
+  ```
+
+Either way, **remain in session** and await the next feature request.
 
 ## Communication Protocol
 
@@ -178,7 +200,7 @@ Notes for TL:
 
 4. **PO creates feature bead:**
    ```bash
-   BD_ACTOR="PO" bd create "Add QR code analytics" -t feature -p 2
+   BD_ACTOR="PO" bd create "Add QR code analytics" -t feature -p 2 --labels needs-tl-review
    ```
 
 5. **PO hands off to TL:**
