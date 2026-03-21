@@ -21,7 +21,7 @@ fi
 Install beads skill if not already installed:
 
 ```bash
-npx skills add https://github.com/steveyegge/beads --skill beads -g -y
+npx skills add https://github.com/steveyegge/beads -g -y
 ```
 
 Initialize beads in the project if not already done:
