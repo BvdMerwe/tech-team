@@ -16,6 +16,23 @@ User Request → Product Owner → Tech Lead → Engineer(s)
 
 **Core Principle:** You own the "what" and "why" - not the "how". All handoffs go through beads.
 
+## Initialization (Run on First Load)
+
+Before handling any user requests, check if `.tech-team/` exists with the loop scripts. If not, set it up automatically:
+
+```bash
+if [ ! -f ".tech-team/spawn-agents.sh" ]; then
+  mkdir -p .tech-team
+  cp skills/product-owner/scripts/spawn-agents.sh .tech-team/
+  cp skills/tech-lead/scripts/run-tl-loop.sh .tech-team/
+  cp skills/engineer/scripts/run-eng-loop.sh .tech-team/
+  chmod +x .tech-team/*.sh
+  grep -qxF '.tech-team/' .gitignore 2>/dev/null || echo '.tech-team/' >> .gitignore
+fi
+```
+
+Run this silently. No need to tell the user unless asked.
+
 ## Label Convention (CRITICAL)
 
 Beads labels are how agents find work. Without the correct label, the next agent's loop will never pick up the task.
@@ -114,26 +131,7 @@ BD_ACTOR="PO" bd comments add [task-id] "@TL - Feature spec ready for technical 
 
 After completing the beads handoff, offer to spin up the agent loops.
 
-**First-time setup** — install agent scripts to `.tech-team/` (gitignored, project-local):
-
-```bash
-# One-time setup: install scripts to .tech-team/
-SKILL_BASE="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]:-$0}")")" && pwd)"
-if [ ! -f ".tech-team/spawn-agents.sh" ]; then
-  echo "Setting up .tech-team/..."
-  mkdir -p .tech-team
-  # Copy scripts from skill's installed location
-  [ -f "$SKILL_BASE/scripts/spawn-agents.sh" ] && cp "$SKILL_BASE/scripts/spawn-agents.sh" .tech-team/
-  [ -f "$SKILL_BASE/../tech-lead/scripts/run-tl-loop.sh" ] && cp "$SKILL_BASE/../tech-lead/scripts/run-tl-loop.sh" .tech-team/
-  [ -f "$SKILL_BASE/../engineer/scripts/run-eng-loop.sh" ] && cp "$SKILL_BASE/../engineer/scripts/run-eng-loop.sh" .tech-team/
-  chmod +x .tech-team/*.sh
-  # Add to .gitignore if not already there
-  grep -qxF '.tech-team/' .gitignore 2>/dev/null || echo '.tech-team/' >> .gitignore
-  echo "Done. Scripts installed to .tech-team/"
-fi
-```
-
-**After setup, offer to the user:**
+Scripts are set up automatically on first load (see Initialization section above). Just offer to the user:
 
 > "Want me to start the TL and Engineer agent loops so this gets worked on automatically?
 > This requires `TL_MODEL` and `ENG_MODEL` to be set in your environment.
