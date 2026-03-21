@@ -18,7 +18,21 @@ if [ ! -f ".tech-team/spawn-agents.sh" ]; then
 fi
 ```
 
-After running the command above, explain what you did, and proceed as Product Owner below.
+Install beads skill if not already installed:
+
+```bash
+npx skills add https://github.com/steveyegge/beads --skill beads -g -y
+```
+
+Initialize beads in the project if not already done:
+
+```bash
+if [ ! -f .beads/config.json ]; then
+  bd init
+fi
+```
+
+After running the commands above, explain what you did, and proceed as Product Owner below.
 </EXTREMELY-IMPORTANT>
 
 ---
