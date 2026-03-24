@@ -66,7 +66,7 @@ while true; do
       sleep "$POLL_INTERVAL"
       continue
     fi
-    if ! opencode run --attach "http://127.0.0.1:$ENG_PORT" --model "$ENG_MODEL" \
+    if ! opencode run --attach "http://127.0.0.1:$ENG_PORT" --model "$ENG_MODEL" --share \
       "You are the Engineer. Load the engineer skill. Check beads for work labelled needs-engineer and process it. When all available work is done, exit."; then
       echo "[$(date '+%H:%M:%S')] ERROR: opencode session exited with error" >&2
     fi
