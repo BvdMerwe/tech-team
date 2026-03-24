@@ -22,8 +22,14 @@ while true; do
   ENG_WORK=$([ "$WORK" != "[]" ] && [ -n "$WORK" ] && echo "yes" || echo "")
   if [ -n "$ENG_WORK" ]; then
     echo "[$(date '+%H:%M:%S')] Engineer work found. Invoking opencode..."
-    cd "$REPO_DIR" && AGENT_LOOP_MODE=engineer opencode run --model "$ENG_MODEL" \
+    # Start a temporary server, run the session, then shut it down
+    ENG_PORT=$((RANDOM + 10000))
+    cd "$REPO_DIR" && AGENT_LOOP_MODE=engineer opencode serve --port "$ENG_PORT" &
+    SERVER_PID=$!
+    sleep 3  # Give server time to start
+    opencode run --attach "http://127.0.0.1:$ENG_PORT" --model "$ENG_MODEL" \
       "You are the Engineer. Load the engineer skill. Check beads for work labelled needs-engineer and process it. When all available work is done, exit."
+    kill "$SERVER_PID" 2>/dev/null || true
     echo "[$(date '+%H:%M:%S')] opencode session complete."
   else
     echo "[$(date '+%H:%M:%S')] No engineer work found. Sleeping ${POLL_INTERVAL}s..."

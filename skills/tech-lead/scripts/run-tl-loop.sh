@@ -18,12 +18,18 @@ echo "Press Ctrl+C to stop."
 while true; do
   # Check for TL-relevant work: features needing review or PRs ready for approval
   # Use --label-any (not --status open) so in_progress tasks are also found
-  WORK=$(cd "$REPO_DIR" && BD_ACTOR="TL" bd list --label-any needs-tl-review pr-ready --json 2>/dev/null || echo "[]")
+  WORK=$(cd "$REPO_DIR" && BD_ACTOR="TL" bd list --label-any needs-tl-review --label-any pr-ready --json 2>/dev/null || echo "[]")
   TL_WORK=$([ "$WORK" != "[]" ] && [ -n "$WORK" ] && echo "yes" || echo "")
   if [ -n "$TL_WORK" ]; then
     echo "[$(date '+%H:%M:%S')] TL work found. Invoking opencode..."
-    cd "$REPO_DIR" && AGENT_LOOP_MODE=tl opencode run --model "$TL_MODEL" \
+    # Start a temporary server, run the session, then shut it down
+    TL_PORT=$((RANDOM + 10000))
+    cd "$REPO_DIR" && AGENT_LOOP_MODE=tl opencode serve --port "$TL_PORT" &
+    SERVER_PID=$!
+    sleep 3  # Give server time to start
+    opencode run --attach "http://127.0.0.1:$TL_PORT" --model "$TL_MODEL" \
       "You are the Tech Lead. Load the tech-lead skill. Check beads for work labelled needs-tl-review or pr-ready and process it. When all available work is done, exit."
+    kill "$SERVER_PID" 2>/dev/null || true
     echo "[$(date '+%H:%M:%S')] opencode session complete."
   else
     echo "[$(date '+%H:%M:%S')] No TL work found. Sleeping ${POLL_INTERVAL}s..."
