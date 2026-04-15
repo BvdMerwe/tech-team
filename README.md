@@ -1,236 +1,102 @@
 # Tech Team Skills
 
-A 3-tier AI agent hierarchy for software engineering teams.
+Two-agent AI system for software projects. Simple. No complexity demon.
 
 ```
-User Request → Product Owner → Tech Lead → Engineer(s)
+User → Grug → Grunk → done
 ```
 
-## Overview
+## Agents
 
-This repository provides a complete engineering team simulation using AI agents with different capabilities and costs:
+| Agent | Model tier | Job |
+|-------|-----------|-----|
+| **Grug** | High (expensive) | Talk user. Write short spec. Review for complexity. |
+| **Grunk** | Low (cheap) | Read spec. Plan. Build. Test. Tag pr-ready. |
 
-| Role | Model Tier | Responsibility | Cost |
-|------|-----------|----------------|------|
-| **Product Owner** | High (expensive) | Brainstorm user needs, create specs | $$$ |
-| **Tech Lead** | Mid-to-High | Architecture, task breakdown, code review | $$ |
-| **Engineer** | Low (cheap) | Implementation, testing | $ |
+Both speak caveman in beads to save tokens.
 
-## Installation
+## Install
 
 ```bash
-# Install all three skills
 npx skills add BvdMerwe/tech-team
-
-# Or install individually
-npx skills add BvdMerwe/tech-team/product-owner
-npx skills add BvdMerwe/tech-team/tech-lead
-npx skills add BvdMerwe/tech-team/engineer
 ```
 
-## The Hierarchy
+Or individually:
+```bash
+npx skills add BvdMerwe/tech-team/grug
+npx skills add BvdMerwe/tech-team/grunk
+```
 
-### 1. Product Owner (PO)
-**Skill:** `product-owner`
+## Usage
 
-**When to invoke:** Starting a new feature, understanding user needs
+### Start loops
 
-**Workflow:**
-1. Brainstorms with user using the `brainstorming` skill
-2. Creates feature specifications in beads task (description + acceptance fields)
-3. Creates feature-level beads tasks
-4. Hands off to Tech Lead
+```bash
+GRUG_MODEL=<model> GRUNK_MODEL=<model> bash skills/grug/scripts/spawn-agents.sh
+```
 
-**Key outputs:**
-- Feature spec documents (user stories, acceptance criteria)
-- Feature tracking in beads
+Example:
+```bash
+GRUG_MODEL=anthropic/claude-sonnet-4-5 GRUNK_MODEL=opencode/big-pickle bash skills/grug/scripts/spawn-agents.sh
+```
 
-### 2. Tech Lead (TL)
-**Skill:** `tech-lead`
+### Use interactively (no loops)
 
-**When to invoke:** Managing technical work, reviewing code
+Invoke directly in opencode:
+```
+/grug   — talk to user, write specs, review work
+/grunk  — implement tasks
+```
 
-**Workflow:**
-1. Reviews PO specs for technical feasibility
-2. Creates technical tasks from features
-3. Assigns work to engineers via beads
-4. Reviews all engineer deliverables
-5. Enforces quality gates
+Both work without loops. Loop mode auto-detected via `$AGENT_LOOP_MODE`.
 
-**Key outputs:**
-- Technical tasks with clear requirements
-- Code reviews and approvals
-- Work coordination through beads
+## Label Flow
 
-### 3. Engineer
-**Skill:** `engineer`
+```
+Grug creates task (needs-grunk)
+  → Grunk picks up, builds, tags pr-ready
+  → Grug reviews: approve (close) or send back (needs-grunk)
+```
 
-**When to invoke:** Implementing tasks
+## Beads Quick Reference
 
-**Workflow:**
-1. Reads `GUARDRAILS.md` for project context (creates if missing)
-2. Claims tasks from Tech Lead
-3. Implements following project patterns
-4. Runs quality gates from GUARDRAILS.md
-5. Submits for TL review
+```bash
+bd ready                             # find available work
+bd show <id> --long                  # read full task
+bd update <id> --claim               # claim task
+bd update <id> --add-label pr-ready  # mark ready for review
+bd close <id> --reason "done"        # close task
+bd dolt push                         # sync to remote
+```
 
-**Key outputs:**
-- Implemented features
-- Passing tests and quality gates
-- PRs for review
+## GUARDRAILS.md
 
-## Project Guardrails
-
-The Engineer skill requires a `GUARDRAILS.md` file in your project root. This file contains:
-- Tech stack and frameworks
+Grunk reads `GUARDRAILS.md` at project root to understand:
+- Tech stack
 - Quality gate commands
-- Key file locations
-- Common patterns
-- Project-specific gotchas
+- Key files and patterns
 
-**Example:**
-```markdown
-# Project Guardrails - MyProject
+If missing, Grunk creates it by asking 3 questions.
 
-## Tech Stack
-- Framework: Next.js 15 + React 19
-- Language: TypeScript
-- Database: PostgreSQL
-- Testing: Vitest
+## How It Works
 
-## Quality Gates
-```bash
-pnpm lint && pnpm test && pnpm build
-```
+1. Grug talks to user, understands problem
+2. Grug writes short caveman spec in beads (`needs-grunk`)
+3. Grunk loop detects task, implements, runs quality gates
+4. Grunk tags `pr-ready`, comments brief summary
+5. Grug loop detects `pr-ready`, reviews for complexity + obvious mistakes
+6. Grug approves (closes) or sends back (`needs-grunk`) with note
 
-## Key Commands
-| Command | Purpose |
-|---------|---------|
-| `pnpm dev` | Start dev server |
-| `pnpm test` | Run tests |
-| `pnpm build` | Production build |
+## Why Caveman
 
-## Key Files
-| File | Purpose |
-|------|---------|
-| `/AGENTS.md` | Project conventions |
-| `/src/lib/db.ts` | Database client |
+Both agents write caveman speak in beads comments and descriptions. ~75% fewer tokens. Still accurate.
 
-## Common Patterns
-**API Route:**
-```typescript
-// Pattern documentation here
-```
-```
+- Bad: "I have completed the implementation and verified all acceptance criteria are met."
+- Good: "grunk done. build X. test pass."
 
-If GUARDRAILS.md doesn't exist, the Engineer skill will offer to create it by asking you 5 questions about your project.
+## Design Docs
 
-## Usage Example
-
-**Starting a new feature:**
-
-1. **User:** "I want to add user authentication"
-
-2. **Invoke Product Owner skill:**
-   - Brainstorms what "authentication" means
-   - Asks about OAuth, email/password, MFA
-   - Creates feature bead with spec inline (description + acceptance fields)
-   - Hands off to TL via beads
-
-3. **Invoke Tech Lead skill:**
-   - Reviews spec for technical feasibility
-   - Creates tasks:
-     - Set up auth database schema
-     - Create login page
-     - Implement OAuth flow
-   - Assigns to Engineer
-
-4. **Invoke Engineer skill:**
-   - Reads GUARDRAILS.md
-   - Claims first task
-   - Implements following project patterns
-   - Runs quality gates
-   - Submits for review
-
-5. **Tech Lead reviews** and either approves or requests changes
-
-6. **Cycle continues** until feature is complete
-
-## Communication Protocol
-
-**All communication happens through beads.**
-
-- PO creates feature beads
-- TL creates technical tasks
-- Engineers report progress
-- TL reviews and approves
-
-No ad-hoc communication - everything is tracked.
-
-## Quality Gates
-
-Every task must pass the quality gates specified in GUARDRAILS.md. Typically:
-- Lint checks
-- Test suite
-- Build validation
-
-**No exceptions.** Evidence before approval.
-
-## Design Documents
-
-See the `docs/` directory for detailed design documents:
-- `2026-03-18-product-owner-skill-design.md` - PO skill design
-- `2026-03-18-tech-lead-skill-design.md` - TL skill design  
-- `2026-03-18-generic-engineer-guardrails-design.md` - Engineer skill + GUARDRAILS.md design
-
-## Model Assignment Strategy
-
-**Why different model tiers?**
-
-- **PO (High/$$$):** Needs sophisticated reasoning about user needs, asking good questions, writing clear specs
-- **TL (Mid-High/$$):** Needs architecture reasoning, code review capabilities, technical decision making
-- **Engineer (Low/$):** Follows clear instructions, implements to spec, reports blockers
-
-This optimizes cost while maintaining quality at each layer.
-
-## Benefits
-
-1. **Clear separation of concerns** - Each role has distinct responsibilities
-2. **Cost optimization** - Use expensive models only where needed
-3. **Quality control** - TL reviews all work, enforces standards
-4. **Reusability** - Same skills work on any project with GUARDRAILS.md
-5. **Traceability** - All work tracked through beads
-
-## Prerequisites
-
-These skills work best when paired with the **superpowers** skill collection:
-
-```bash
-npx skills add obra/superpowers
-```
-
-**Recommended superpowers:**
-- `brainstorming` - Required by Product Owner for requirement gathering
-- `writing-plans` - Used by Tech Lead for implementation planning
-- `beads` - Task tracking system (required by all roles)
-
-## Related Skills
-
-Additional skills that complement this hierarchy:
-- `finding-tasks` - For breaking down large features
-- `requesting-code-review` - For structured code review workflows
-
-## Contributing
-
-To add a new skill to this hierarchy:
-1. Create skill in `skills/[name]/` with a `SKILL.md` containing YAML frontmatter (`name` and `description` fields)
-2. Follow the 3-tier model
-3. Update this README
-4. Commit and push
-
-## License
-
-MIT
+See `docs/` for detailed design history.
 
 ---
 

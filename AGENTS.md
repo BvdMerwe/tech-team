@@ -2,6 +2,22 @@
 
 This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
 
+## Team: Grug + Grunk
+
+Two agents. Simple. No complexity demon.
+
+| Agent | Role | Polls |
+|-------|------|-------|
+| **Grug** | Think, spec, review | `pr-ready` |
+| **Grunk** | Plan, build, commit | `needs-grunk` |
+
+**Label flow:** Grug creates task (`needs-grunk`) → Grunk builds → tags `pr-ready` → Grug reviews → close or send back (`needs-grunk`)
+
+**Spawn loops:**
+```bash
+GRUG_MODEL=<model> GRUNK_MODEL=<model> bash skills/grug/scripts/spawn-agents.sh
+```
+
 ## Quick Reference
 
 ```bash
