@@ -16,6 +16,8 @@ if [ -z "${GRUG_MODEL:-}" ] || [ -z "${GRUNK_MODEL:-}" ]; then
 fi
 
 TECH_TEAM_DIR="$SKILL_DIR/.trogteam"
+# spawn-agents.sh is the ONLY place that copies scripts to .trogteam/.
+# Loop scripts do NOT self-copy. Single setup location = no duplication.
 mkdir -p "$TECH_TEAM_DIR"
 
 GRUG_SOURCE="$SKILL_DIR/skills/grug/scripts/run-grug-loop.sh"

@@ -123,6 +123,8 @@ If solution feel complex — stop. Think again. Make simple.
 
 On start, check if caveman skill installed:
 ```bash
+# ~/.agents/skills/ is the standard agent skill install location.
+# This path is intentional - it's where `agent skill install caveman` puts the skill.
 ls ~/.agents/skills/caveman/SKILL.md 2>/dev/null && echo "installed" || echo "not installed"
 ```
 
