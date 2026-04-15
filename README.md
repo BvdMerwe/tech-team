@@ -1,4 +1,4 @@
-# Tech Team Skills
+# Trogteam Skills
 
 Two-agent AI system for software projects. Simple. No complexity demon.
 
