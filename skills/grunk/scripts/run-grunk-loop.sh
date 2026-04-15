@@ -10,6 +10,16 @@ if [ -z "$GRUNK_MODEL" ]; then
   exit 1
 fi
 
+# Auto-setup .trogteam/ if missing (fresh clone, renamed folder, etc)
+TECH_TEAM_DIR="$REPO_DIR/.trogteam"
+if [ ! -d "$TECH_TEAM_DIR" ]; then
+  echo "Setting up .trogteam/ from skills/..."
+  mkdir -p "$TECH_TEAM_DIR"
+  cp -f "$REPO_DIR/skills/grug/scripts/run-grug-loop.sh" "$TECH_TEAM_DIR/run-grug-loop.sh"
+  cp -f "$REPO_DIR/skills/grunk/scripts/run-grunk-loop.sh" "$TECH_TEAM_DIR/run-grunk-loop.sh"
+  chmod +x "$TECH_TEAM_DIR/run-grug-loop.sh" "$TECH_TEAM_DIR/run-grunk-loop.sh"
+fi
+
 LOCK_DIR="$REPO_DIR/.trogteam"
 LOCK_KEY=$(echo "$REPO_DIR" | md5sum 2>/dev/null | cut -d' ' -f1 || echo "$REPO_DIR" | md5 2>/dev/null || echo "$REPO_DIR" | cksum | cut -d' ' -f1)
 LOCKFILE="$LOCK_DIR/.grunk-loop.$LOCK_KEY.lock"
