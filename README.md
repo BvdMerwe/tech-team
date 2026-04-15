@@ -50,6 +50,54 @@ Invoke directly in opencode:
 
 Both work without loops. Loop mode auto-detected via `$AGENT_LOOP_MODE`.
 
+## Agent Configuration
+
+Grug and Grunk ship as configured agents for both OpenCode and Claude.
+
+### OpenCode agents
+
+The repo includes project-level agents in `.opencode/agents/`. They activate automatically when you open the project in OpenCode.
+
+To install globally (works in any project):
+
+```bash
+# Copy to your global opencode agents directory
+cp .opencode/agents/grug.md ~/.config/opencode/agents/
+cp .opencode/agents/grunk.md ~/.config/opencode/agents/
+```
+
+**In the TUI:**
+- Press **Tab** to switch Grug or Grunk as your primary agent
+- Type `@grug` or `@grunk` to invoke as a subagent mid-conversation
+
+**Configuration options** (edit `.opencode/agents/grug.md` or `grunk.md`):
+
+```yaml
+---
+description: ...     # shown in agent picker
+mode: all            # primary + subagent (or: primary, subagent)
+model: ...           # override model for this agent
+temperature: 0.3
+color: "#8B4513"     # color in TUI
+permission:
+  bash: allow
+  edit:
+    "GUARDRAILS.md": ask
+    "*": allow
+---
+```
+
+### Claude subagents
+
+For use with Claude Code or as subagents in Claude sessions:
+
+```bash
+cp .opencode/agents/grug.md ~/.claude/agents/
+cp .opencode/agents/grunk.md ~/.claude/agents/
+```
+
+Claude subagents appear in the Task tool and can be invoked by other agents automatically based on their description.
+
 ## Label Flow
 
 ```
