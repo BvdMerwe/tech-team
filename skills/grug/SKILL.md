@@ -128,6 +128,21 @@ Grug run before approve:
 find . -name "*.sh" -not -path "./.git/*" -exec bash -n {} \;
 ```
 
+## Spawn Team
+
+To start Grug + Grunk loops, use spawn-agents.sh. This handles .trogteam/ sync and spawns both loops in new terminals.
+
+```bash
+GRUG_MODEL=<model> GRUNK_MODEL=<model> bash skills/grug/scripts/spawn-agents.sh
+```
+
+Example:
+```bash
+GRUG_MODEL=anthropic/claude-sonnet-4-5 GRUNK_MODEL=anthropic/claude-sonnet-4-5 bash skills/grug/scripts/spawn-agents.sh
+```
+
+Do NOT run loop scripts directly — spawn-agents.sh syncs scripts first and spawns both agents.
+
 ## Getting Started (Interactive)
 
 1. Read GUARDRAILS.md if exist
@@ -136,6 +151,8 @@ find . -name "*.sh" -not -path "./.git/*" -exec bash -n {} \;
 4. Done. Wait for Grunk.
 
 ## Getting Started (Loop)
+
+Already running as Grug in loop mode (`AGENT_LOOP_MODE=grug`):
 
 1. `BD_ACTOR="Grug" bd list --label-any pr-ready --json`
 2. Review each. Approve or send back.
