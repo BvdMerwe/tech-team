@@ -5,4 +5,4 @@ echo "Copying scripts"
 cp -r skills ~/.agents
 
 echo "Deleting artifacts and running opencode"
-rm -rf .tech-team 2>/dev/null; opencode run "/product-owner" --model opencode/big-pickle
+rm -rf .trogteam 2>/dev/null; opencode run "/product-owner" --model opencode/big-pickle

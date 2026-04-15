@@ -8,14 +8,14 @@ if [ -z "${GRUG_MODEL:-}" ] || [ -z "${GRUNK_MODEL:-}" ]; then
   echo "Error: GRUG_MODEL and GRUNK_MODEL must both be set before spawning agents."
   echo ""
   echo "Usage:"
-  echo "  GRUG_MODEL=<model> GRUNK_MODEL=<model> bash .tech-team/spawn-agents.sh"
+  echo "  GRUG_MODEL=<model> GRUNK_MODEL=<model> bash .trogteam/spawn-agents.sh"
   echo ""
   echo "Example:"
-  echo "  GRUG_MODEL=anthropic/claude-sonnet-4-5 GRUNK_MODEL=opencode/big-pickle bash .tech-team/spawn-agents.sh"
+  echo "  GRUG_MODEL=anthropic/claude-sonnet-4-5 GRUNK_MODEL=opencode/big-pickle bash .trogteam/spawn-agents.sh"
   exit 1
 fi
 
-TECH_TEAM_DIR="$SKILL_DIR/.tech-team"
+TECH_TEAM_DIR="$SKILL_DIR/.trogteam"
 mkdir -p "$TECH_TEAM_DIR"
 
 GRUG_SOURCE="$SKILL_DIR/skills/grug/scripts/run-grug-loop.sh"
@@ -36,7 +36,7 @@ cp -f "$GRUG_SOURCE" "$GRUG_TARGET"
 cp -f "$GRUNK_SOURCE" "$GRUNK_TARGET"
 chmod +x "$GRUG_TARGET" "$GRUNK_TARGET"
 
-echo "Scripts synced from skills/ to .tech-team/"
+echo "Scripts synced from skills/ to .trogteam/"
 echo "Spawning Grug loop (model: $GRUG_MODEL)..."
 echo "Spawning Grunk loop (model: $GRUNK_MODEL)..."
 

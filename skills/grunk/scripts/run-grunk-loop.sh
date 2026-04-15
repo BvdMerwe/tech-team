@@ -6,11 +6,11 @@ REPO_DIR="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel 2>/dev/null || (cd "$
 GRUNK_MODEL="${GRUNK_MODEL:-}"
 if [ -z "$GRUNK_MODEL" ]; then
   echo "Error: GRUNK_MODEL env var is not set."
-  echo "Usage: GRUNK_MODEL=<model-name> bash .tech-team/run-grunk-loop.sh"
+  echo "Usage: GRUNK_MODEL=<model-name> bash .trogteam/run-grunk-loop.sh"
   exit 1
 fi
 
-LOCK_DIR="$REPO_DIR/.tech-team"
+LOCK_DIR="$REPO_DIR/.trogteam"
 LOCK_KEY=$(echo "$REPO_DIR" | md5sum 2>/dev/null | cut -d' ' -f1 || echo "$REPO_DIR" | md5 2>/dev/null || echo "$REPO_DIR" | cksum | cut -d' ' -f1)
 LOCKFILE="$LOCK_DIR/.grunk-loop.$LOCK_KEY.lock"
 
