@@ -27,6 +27,17 @@ npx skills add BvdMerwe/tech-team/grug
 npx skills add BvdMerwe/tech-team/grunk
 ```
 
+Also install beads for task tracking:
+```bash
+npx skills add https://github.com/steveyegge/beads -g
+bd init
+```
+
+Optional — enhanced caveman output:
+```bash
+npx skills add JuliusBrussee/caveman
+```
+
 ## Usage
 
 ### Start loops
