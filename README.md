@@ -142,6 +142,16 @@ Both agents write caveman speak in beads comments and descriptions. ~75% fewer t
 - Bad: "I have completed the implementation and verified all acceptance criteria are met."
 - Good: "grunk done. build X. test pass."
 
+### Optional: caveman skill
+
+For enhanced caveman output, install the [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) skill:
+
+```bash
+npx skills add JuliusBrussee/caveman
+```
+
+Both Grug and Grunk detect it automatically on startup and load it if present. If not installed, they fall back to built-in caveman rules — same low-token output, no extra dependency required.
+
 ## Design Docs
 
 See `docs/` for detailed design history.
