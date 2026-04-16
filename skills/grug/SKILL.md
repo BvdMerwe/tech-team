@@ -73,9 +73,39 @@ For each task — read it, check the code/commit. Ask:
 - Acceptance criteria met?
 
 **Approve:**
+
+Attempt merge first. Only close bead if merge succeeds. If conflict — comment, do NOT close.
+
 ```bash
-BD_ACTOR="Grug" bd comments add [id] "grug review. look good. no complexity demon. ship."
-BD_ACTOR="Grug" bd close [id] --reason "grug approve"
+TASK_ID="[id]"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+GRUNK_BRANCH="$(git branch -r | grep "origin/grunk/${TASK_ID}-" | sed 's|.*origin/||' | head -1)"
+
+if [ -n "$GRUNK_BRANCH" ]; then
+  WORKTREE_PATH="/tmp/grug-merge-${TASK_ID}-$$"
+  git fetch origin
+  git worktree add "$WORKTREE_PATH" main
+  cd "$WORKTREE_PATH"
+  git pull origin main
+  if git merge --no-ff "origin/${GRUNK_BRANCH}" -m "merge: ${GRUNK_BRANCH} into main (#${TASK_ID})"; then
+    git push origin main
+    cd "$REPO_ROOT"
+    git worktree remove --force "$WORKTREE_PATH"
+    BD_ACTOR="Grug" bd comments add "$TASK_ID" "grug review. look good. no complexity demon. branch ${GRUNK_BRANCH} merged to main. ship."
+    BD_ACTOR="Grug" bd close "$TASK_ID" --reason "grug approve"
+  else
+    # Conflict — abort, clean up, comment, do NOT close
+    git merge --abort 2>/dev/null || true
+    cd "$REPO_ROOT"
+    git worktree remove --force "$WORKTREE_PATH"
+    BD_ACTOR="Grug" bd comments add "$TASK_ID" "merge conflict: ${GRUNK_BRANCH} → main. branch left. grunk fix conflict."
+    BD_ACTOR="Grug" bd update "$TASK_ID" --remove-label pr-ready --add-label needs-grunk
+  fi
+else
+  # No grunk branch found — close normally
+  BD_ACTOR="Grug" bd comments add "$TASK_ID" "grug review. look good. no complexity demon. ship."
+  BD_ACTOR="Grug" bd close "$TASK_ID" --reason "grug approve"
+fi
 ```
 
 **Send back:**
