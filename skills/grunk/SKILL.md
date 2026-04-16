@@ -42,7 +42,28 @@ echo $AGENT_LOOP_MODE
 cat GUARDRAILS.md 2>/dev/null || cat .opencode/GUARDRAILS.md 2>/dev/null || echo "no guardrails"
 ```
 
-If no GUARDRAILS.md — ask user 3 questions: tech stack, quality gates, key files. Create it.
+If no GUARDRAILS.md — ask user these 3 questions, then create it:
+1. **Tech stack**: What language/framework/tools does this project use?
+2. **Quality gates**: What commands verify the code is correct? (tests, linters, build)
+3. **Key files**: What are the most important files/directories to know about?
+
+Create GUARDRAILS.md from answers:
+```bash
+cat > GUARDRAILS.md << 'EOF'
+# Project Guardrails
+
+## Tech Stack
+[answer 1]
+
+## Quality Gates
+```bash
+[answer 2]
+```
+
+## Key Files
+[answer 3]
+EOF
+```
 
 **Step 2: Check mode**
 ```bash
