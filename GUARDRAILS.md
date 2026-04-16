@@ -49,9 +49,9 @@ Rest of skill documentation...
 
 ### Agent Loop Scripts
 The `.trogteam/` scripts orchestrate agent loops:
-- `run-eng-loop.sh` - Runs the Engineer agent loop
-- `run-tl-loop.sh` - Runs the Tech Lead agent loop
-- `spawn-agents.sh` - Spawns multiple agents
+- `run-grug-loop.sh` - Runs the Grug agent loop
+- `run-grunk-loop.sh` - Runs the Grunk agent loop
+- `spawn-agents.sh` - Spawns both agents
 
 ## Project-Specific Gotchas
 1. This is a script/markdown repo - no npm/yarn/pnpm
