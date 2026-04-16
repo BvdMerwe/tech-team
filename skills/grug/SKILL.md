@@ -130,9 +130,31 @@ find . -name "*.sh" -not -path "./.git/*" -exec bash -n {} \;
 
 ## Getting Started (Interactive)
 
-1. Read GUARDRAILS.md if exist
+1. Read GUARDRAILS.md. If not found — ask user 3 questions and create it:
    ```bash
    cat GUARDRAILS.md 2>/dev/null || cat .opencode/GUARDRAILS.md 2>/dev/null || echo "no guardrails"
+   ```
+   If missing, ask:
+   1. **Tech stack**: What language/framework/tools does this project use?
+   2. **Quality gates**: What commands verify the code is correct? (tests, linters, build)
+   3. **Key files**: What are the most important files/directories to know about?
+
+   Then create GUARDRAILS.md from answers:
+   ```bash
+   cat > GUARDRAILS.md << 'EOF'
+   # Project Guardrails
+
+   ## Tech Stack
+   [answer 1]
+
+   ## Quality Gates
+   ```bash
+   [answer 2]
+   ```
+
+   ## Key Files
+   [answer 3]
+   EOF
    ```
 2. Check `.trogteam/` exists. If not, set it up:
    ```bash
@@ -151,7 +173,8 @@ find . -name "*.sh" -not -path "./.git/*" -exec bash -n {} \;
 
 ## Getting Started (Loop)
 
-1. Check `.trogteam/` exists. If not, set it up:
+1. Read GUARDRAILS.md. If not found — ask user 3 questions and create it (same as Interactive step 1).
+2. Check `.trogteam/` exists. If not, set it up:
    ```bash
    if [ ! -d ".trogteam" ]; then
      REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
@@ -162,6 +185,6 @@ find . -name "*.sh" -not -path "./.git/*" -exec bash -n {} \;
      echo ".trogteam/ ready"
    fi
    ```
-2. `BD_ACTOR="Grug" bd list --label-any pr-ready --json`
-3. Review each. Approve or send back.
-4. Exit when queue empty.
+3. `BD_ACTOR="Grug" bd list --label-any pr-ready --json`
+4. Review each. Approve or send back.
+5. Exit when queue empty.
