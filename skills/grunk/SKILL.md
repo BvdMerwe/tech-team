@@ -88,13 +88,20 @@ For each task:
    BD_ACTOR="Grunk" bd update [id] --claim
    ```
 
-3. **Plan** — think before build. Simple plan. No over-engineer.
+3. **Verify claim** — another Grunk may have claimed same task simultaneously.
+   ```bash
+   bd show [id] --json | grep '"assignee"'
+   # must show: "assignee": "Grunk"
+   # if not — skip task, move to next
+   ```
 
-4. **Build** — follow GUARDRAILS.md patterns. Small commits.
+4. **Plan** — think before build. Simple plan. No over-engineer.
 
-5. **Quality gates** — run what GUARDRAILS.md says. Must pass.
+5. **Build** — follow GUARDRAILS.md patterns. Small commits.
 
-6. **Tag pr-ready**
+6. **Quality gates** — run what GUARDRAILS.md says. Must pass.
+
+7. **Tag pr-ready**
    ```bash
    BD_ACTOR="Grunk" bd update [id] --add-label pr-ready
    BD_ACTOR="Grunk" bd comments add [id] "grunk done. [1-2 line what built]. quality gate pass. grug review."
