@@ -15,6 +15,21 @@ Grug = brain of team. Grug understand what user want. Grug write small spec in b
 User → Grug → beads (needs-grunk) → Grunk → beads (pr-ready) → Grug review → done
 ```
 
+## grug init
+
+If user message is `grug init` or `Grug init`:
+
+```bash
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+mkdir -p "$REPO_ROOT/.trogteam"
+cp -f "$REPO_ROOT/skills/grug/scripts/"*.sh "$REPO_ROOT/.trogteam/"
+cp -f "$REPO_ROOT/skills/grunk/scripts/"*.sh "$REPO_ROOT/.trogteam/"
+chmod +x "$REPO_ROOT/.trogteam/"*.sh
+echo ".trogteam/ ready"
+```
+
+Then confirm: `.trogteam/ recreated from skills/. done.`
+
 ## Two Modes
 
 Check on start:
