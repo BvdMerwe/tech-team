@@ -131,12 +131,37 @@ find . -name "*.sh" -not -path "./.git/*" -exec bash -n {} \;
 ## Getting Started (Interactive)
 
 1. Read GUARDRAILS.md if exist
-2. Ask user what problem
-3. Write short spec in beads with `needs-grunk`
-4. Done. Wait for Grunk.
+   ```bash
+   cat GUARDRAILS.md 2>/dev/null || cat .opencode/GUARDRAILS.md 2>/dev/null || echo "no guardrails"
+   ```
+2. Check `.trogteam/` exists. If not, set it up:
+   ```bash
+   if [ ! -d ".trogteam" ]; then
+     REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+     mkdir -p "$REPO_ROOT/.trogteam"
+     cp -f "$REPO_ROOT/skills/grug/scripts/run-grug-loop.sh" "$REPO_ROOT/.trogteam/"
+     cp -f "$REPO_ROOT/skills/grunk/scripts/run-grunk-loop.sh" "$REPO_ROOT/.trogteam/"
+     chmod +x "$REPO_ROOT/.trogteam/"*.sh
+     echo ".trogteam/ ready"
+   fi
+   ```
+3. Ask user what problem
+4. Write short spec in beads with `needs-grunk`
+5. Done. Wait for Grunk.
 
 ## Getting Started (Loop)
 
-1. `BD_ACTOR="Grug" bd list --label-any pr-ready --json`
-2. Review each. Approve or send back.
-3. Exit when queue empty.
+1. Check `.trogteam/` exists. If not, set it up:
+   ```bash
+   if [ ! -d ".trogteam" ]; then
+     REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+     mkdir -p "$REPO_ROOT/.trogteam"
+     cp -f "$REPO_ROOT/skills/grug/scripts/run-grug-loop.sh" "$REPO_ROOT/.trogteam/"
+     cp -f "$REPO_ROOT/skills/grunk/scripts/run-grunk-loop.sh" "$REPO_ROOT/.trogteam/"
+     chmod +x "$REPO_ROOT/.trogteam/"*.sh
+     echo ".trogteam/ ready"
+   fi
+   ```
+2. `BD_ACTOR="Grug" bd list --label-any pr-ready --json`
+3. Review each. Approve or send back.
+4. Exit when queue empty.
