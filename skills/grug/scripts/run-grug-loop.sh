@@ -19,4 +19,4 @@ export AGENT_LOOP_MODE="grug"
 export POLL_INTERVAL="${GRUG_POLL_INTERVAL:-30}"
 export AGENT_PROMPT="You are Grug. Load the grug skill. Also load the caveman skill. Check beads for work labelled pr-ready and review it for complexity and obvious mistakes. Approve or send back. When all work reviewed, exit."
 
-exec bash "$REPO_DIR/skills/grug/scripts/run-agent-loop.sh"
+exec bash "$REPO_DIR/.trogteam/run-agent-loop.sh"
