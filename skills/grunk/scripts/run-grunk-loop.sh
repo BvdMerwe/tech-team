@@ -141,7 +141,6 @@ main() {
       else
         WORKTREE_PATH=$(create_worktree "$TASK_ID" "$TASK_TITLE")
         claim_task "$TASK_ID"
-        cd "$REPO_DIR" && BD_ACTOR="Grunk" bd update "$TASK_ID" --remove-label needs-grunk 2>/dev/null || true
         log "Created new worktree: $WORKTREE_PATH"
       fi
 
@@ -151,7 +150,7 @@ main() {
       # Work in worktree directory
       WORK_DIR="$WORKTREE_PATH"
 
-      AGENT_PROMPT="You are Grunk. Load the grunk skill. You are working in a git worktree at $WORKTREE_PATH. Task: $TASK_ID - $TASK_TITLE. Check beads, implement, tag pr-ready when done, then exit. Do NOT cleanup the worktree when done - Grug will handle that after review."
+      AGENT_PROMPT="You are Grunk. Load the grunk skill. You are working in a git worktree at $WORKTREE_PATH. Task: $TASK_ID - $TASK_TITLE. Check beads, implement, when done tag pr-ready AND remove needs-grunk in one command: BD_ACTOR=Grunk bd update $TASK_ID --add-label pr-ready --remove-label needs-grunk. Then exit. Do NOT cleanup the worktree when done - Grug will handle that after review."
 
       run_agent "$TASK_ID" "$TASK_TITLE" "$AGENT_PROMPT"
 

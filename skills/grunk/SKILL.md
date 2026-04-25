@@ -101,9 +101,9 @@ For each task:
 
 6. **Quality gates** — run what GUARDRAILS.md says. Must pass.
 
-7. **Tag pr-ready**
+7. **Tag pr-ready** — remove needs-grunk at same time
    ```bash
-   BD_ACTOR="Grunk" bd update [id] --add-label pr-ready
+   BD_ACTOR="Grunk" bd update [id] --add-label pr-ready --remove-label needs-grunk
    BD_ACTOR="Grunk" bd comments add [id] "grunk done. [1-2 line what built]. quality gate pass. grug review."
    ```
 
@@ -192,7 +192,7 @@ All must pass before pr-ready.
 BD_ACTOR="Grunk" bd list --label-any needs-grunk --json
 # claim first task
 # build
-# pr-ready
+# add pr-ready, remove needs-grunk
 # next task
 # exit when empty
 ```
