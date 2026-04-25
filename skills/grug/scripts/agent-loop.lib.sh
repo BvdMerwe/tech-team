@@ -83,7 +83,7 @@ run_agent() {
   fi
 
   export AGENT_LOOP_MODE
-  if ! opencode run --attach "http://127.0.0.1:$PORT" --model "$AGENT_MODEL" --share "$agent_prompt"; then
+  if ! opencode run --attach "http://127.0.0.1:$PORT" --model "$AGENT_MODEL" "$agent_prompt"; then
     log "opencode session exited with error"
   fi
 

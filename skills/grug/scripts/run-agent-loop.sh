@@ -70,7 +70,7 @@ while true; do
       sleep "$POLL_INTERVAL"
       continue
     fi
-    if ! opencode run --attach "http://127.0.0.1:$PORT" --model "$AGENT_MODEL" --share "$AGENT_PROMPT"; then
+    if ! opencode run --attach "http://127.0.0.1:$PORT" --model "$AGENT_MODEL" "$AGENT_PROMPT"; then
       echo "[$(date '+%H:%M:%S')] ERROR: opencode session exited with error" >&2
     fi
     kill "$SERVER_PID" 2>/dev/null || true
