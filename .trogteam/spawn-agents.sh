@@ -16,18 +16,29 @@ if [ -z "${GRUG_MODEL:-}" ] || [ -z "${GRUNK_MODEL:-}" ]; then
 fi
 
 TECH_TEAM_DIR="$SKILL_DIR/.trogteam"
+# spawn-agents.sh is the ONLY place that copies scripts to .trogteam/.
+# Loop scripts do NOT self-copy. Single setup location = no duplication.
 mkdir -p "$TECH_TEAM_DIR"
 
-# Ensure directories are in .gitignore before loop scripts use them
-grep -q "^.worktrees/$" "$SKILL_DIR/.gitignore" 2>/dev/null || echo ".worktrees/" >> "$SKILL_DIR/.gitignore"
-grep -q "^.trogteam/$" "$SKILL_DIR/.gitignore" 2>/dev/null || echo ".trogteam/" >> "$SKILL_DIR/.gitignore"
+GRUG_SOURCE="$SKILL_DIR/skills/grug/scripts/run-grug-loop.sh"
+GRUNK_SOURCE="$SKILL_DIR/skills/grunk/scripts/run-grunk-loop.sh"
+GRUG_TARGET="$TECH_TEAM_DIR/run-grug-loop.sh"
+GRUNK_TARGET="$TECH_TEAM_DIR/run-grunk-loop.sh"
 
-# Always copy latest versions to .trogteam/ — keeps scripts up to date
+if [ ! -f "$GRUG_SOURCE" ]; then
+  echo "Error: Grug script not found at $GRUG_SOURCE"
+  exit 1
+fi
+if [ ! -f "$GRUNK_SOURCE" ]; then
+  echo "Error: Grunk script not found at $GRUNK_SOURCE"
+  exit 1
+fi
+
 cp -f "$GRUG_SOURCE" "$GRUG_TARGET"
 cp -f "$GRUNK_SOURCE" "$GRUNK_TARGET"
 chmod +x "$GRUG_TARGET" "$GRUNK_TARGET"
 
-echo "Scripts updated from skills/"
+echo "Scripts synced from skills/ to .trogteam/"
 
 # Compute lock key same way loop scripts do
 LOCK_KEY=$(echo "$SKILL_DIR" | md5sum 2>/dev/null | cut -d' ' -f1 || echo "$SKILL_DIR" | md5 2>/dev/null || echo "$SKILL_DIR" | cksum | cut -d' ' -f1)
