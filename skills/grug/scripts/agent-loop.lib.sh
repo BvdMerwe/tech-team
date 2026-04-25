@@ -69,7 +69,9 @@ run_agent() {
   PORT=$((RANDOM + 10000))
 
   # Start server in current shell (not subshell) so $! is reliable
-  cd "$REPO_DIR" && opencode serve --port "$PORT" &>/dev/null &
+  # Use WORK_DIR if set (e.g. grunk worktree), otherwise fall back to REPO_DIR
+  local serve_dir="${WORK_DIR:-$REPO_DIR}"
+  cd "$serve_dir" && opencode serve --port "$PORT" &>/dev/null &
   SERVER_PID=$!
   log "Starting opencode serve on port $PORT (pid $SERVER_PID)"
 
