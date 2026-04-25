@@ -42,6 +42,9 @@ cp -f "$GRUG_SRC/"*.sh "$REPO_ROOT/.trogteam/"
 cp -f "$GRUNK_SRC/"*.sh "$REPO_ROOT/.trogteam/"
 chmod +x "$REPO_ROOT/.trogteam/"*.sh
 
+GRUG_TARGET="$REPO_ROOT/.trogteam/run-grug-loop.sh"
+GRUNK_TARGET="$REPO_ROOT/.trogteam/run-grunk-loop.sh"
+
 echo "Scripts updated from skills/"
 
 # Compute lock key same way loop scripts do
