@@ -178,4 +178,5 @@ See `docs/` for detailed design history.
 
 <!-- worktree test: grunk build, grug review -->
 <!-- grunk was here - test complete -->
+<!-- tech-team-z1w: worktree flow verified ok -->
 
