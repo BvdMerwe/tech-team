@@ -68,8 +68,15 @@ create_worktree() {
 
   # Ensure main is up to date
   cd "$REPO_DIR"
-  git checkout main 2>/dev/null || git checkout master 2>/dev/null
-  git pull origin main 2>/dev/null || true
+  git checkout main 2>/dev/null >&2 || git checkout master 2>/dev/null >&2
+  git pull origin main 2>/dev/null >&2 || true
+
+  # Clean up stale branch/worktree from previous failed runs
+  if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+    log "Stale branch $branch_name found — cleaning up"
+    git worktree remove --force "$worktree_path" 2>/dev/null >&2 || true
+    git branch -D "$branch_name" 2>/dev/null >&2 || true
+  fi
 
   # Create worktree with new branch (redirect to stderr so stdout stays clean for return value)
   git worktree add "$worktree_path" -b "$branch_name" >&2
