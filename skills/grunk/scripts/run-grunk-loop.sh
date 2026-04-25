@@ -141,6 +141,7 @@ main() {
       else
         WORKTREE_PATH=$(create_worktree "$TASK_ID" "$TASK_TITLE")
         claim_task "$TASK_ID"
+        cd "$REPO_DIR" && BD_ACTOR="Grunk" bd update "$TASK_ID" --remove-label needs-grunk 2>/dev/null || true
         log "Created new worktree: $WORKTREE_PATH"
       fi
 
