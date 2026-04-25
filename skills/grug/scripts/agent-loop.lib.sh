@@ -33,11 +33,6 @@ wait_for_server() {
   return 1
 }
 
-start_server() {
-  local port=$1
-  cd "$WORK_DIR" && opencode serve --port "$PORT" &
-  echo $!
-}
 
 # Lock management
 acquire_lock() {
@@ -72,9 +67,11 @@ run_agent() {
   local agent_prompt="$3"
 
   PORT=$((RANDOM + 10000))
-  log "Starting opencode serve on port $PORT"
 
-  SERVER_PID=$(start_server "$PORT")
+  # Start server in current shell (not subshell) so $! is reliable
+  cd "$REPO_DIR" && opencode serve --port "$PORT" &>/dev/null &
+  SERVER_PID=$!
+  log "Starting opencode serve on port $PORT (pid $SERVER_PID)"
 
   if ! wait_for_server "$PORT" 30; then
     log "ERROR: Server failed to start within 30s"
