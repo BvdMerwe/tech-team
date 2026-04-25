@@ -23,7 +23,7 @@ export POLL_INTERVAL="${GRUG_POLL_INTERVAL:-30}"
 # Source shared library
 source "$(dirname "$0")/agent-loop.lib.sh"
 
-AGENT_PROMPT="You are Grug. Load the grug skill. Also load the caveman skill. Check beads for work labelled pr-ready and review it for complexity and obvious mistakes. Approve or send back. When all work reviewed, exit."
+AGENT_PROMPT_TEMPLATE="You are Grug. Load the grug skill. Your task: review bead TASK_ID (title: TASK_TITLE). Run: BD_ACTOR=Grug bd show TASK_ID to read it. Check code/commits. Approve (merge branch, close bead) or send back (remove pr-ready, add needs-grunk, comment why). Use exact bd commands from grug skill. Do NOT run bd ready. Do NOT look for other tasks. Only review TASK_ID. When done, exit."
 
 main() {
   acquire_lock || exit 1
@@ -40,6 +40,9 @@ main() {
 
       log "Found work: $TASK_ID - $TASK_TITLE"
       WORK_DIR="$REPO_DIR"
+
+      AGENT_PROMPT="${AGENT_PROMPT_TEMPLATE//TASK_ID/$TASK_ID}"
+      AGENT_PROMPT="${AGENT_PROMPT//TASK_TITLE/$TASK_TITLE}"
 
       run_agent "$TASK_ID" "$TASK_TITLE" "$AGENT_PROMPT"
     else
