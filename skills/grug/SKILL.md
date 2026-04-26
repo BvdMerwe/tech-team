@@ -129,6 +129,13 @@ if [ -n "$GRUNK_BRANCH" ]; then
     git push origin --delete "$GRUNK_BRANCH" 2>/dev/null || true
     BD_ACTOR="Grug" bd comments add "$TASK_ID" "grug review. look good. no complexity demon. branch ${GRUNK_BRANCH} merged to main. worktree cleaned. ship."
     BD_ACTOR="Grug" bd close "$TASK_ID" --reason "grug approve"
+    # commit and push beads changes
+    cd "$REPO_ROOT"
+    git add .beads/ 2>/dev/null || true
+    if ! git diff --cached --quiet 2>/dev/null; then
+      git commit -m "beads: grug reviewed ${TASK_ID}" || true
+      git push origin main 2>&1 || echo "push failed for ${TASK_ID}"
+    fi
   else
     # Conflict — abort, clean up, comment, do NOT close
     git merge --abort 2>/dev/null || true
@@ -141,6 +148,13 @@ else
   # No grunk branch found — close normally
   BD_ACTOR="Grug" bd comments add "$TASK_ID" "grug review. look good. no complexity demon. ship."
   BD_ACTOR="Grug" bd close "$TASK_ID" --reason "grug approve"
+  # commit and push beads changes
+  cd "$REPO_ROOT"
+  git add .beads/ 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit -m "beads: grug reviewed ${TASK_ID}" || true
+    git push origin main 2>&1 || echo "push failed for ${TASK_ID}"
+  fi
 fi
 ```
 
@@ -148,6 +162,12 @@ fi
 ```bash
 BD_ACTOR="Grug" bd update [id] --remove-label pr-ready --add-label needs-grunk
 BD_ACTOR="Grug" bd comments add [id] "grug see problem: [short]. fix. come back."
+# commit and push beads changes
+git add .beads/ 2>/dev/null || true
+if ! git diff --cached --quiet 2>/dev/null; then
+  git commit -m "beads: grug reviewed [id]" || true
+  git push origin main 2>&1 || echo "push failed for [id]"
+fi
 ```
 
 When all work reviewed — exit clean.
