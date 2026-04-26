@@ -40,7 +40,9 @@ init_worktrees() {
 
 # Read state
 get_state() {
-  cat "$STATE_FILE" 2>/dev/null || echo '{}'
+  local content
+  content=$(cat "$STATE_FILE" 2>/dev/null || echo '')
+  if [ -z "$content" ]; then echo '{}'; else echo "$content"; fi
 }
 
 # Get worktree for a task
